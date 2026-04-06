@@ -17,26 +17,58 @@ def kelvin_to_celsius(k):
     return k - 273.15
 
 def convert(value, from_unit, to_unit):
-    """Universal converter. Supports C, F, K."""
-    from_unit = from_unit.upper()
-    to_unit   = to_unit.upper()
+    """
+    Universal temperature converter.
+    Supports units: C (Celsius), F (Fahrenheit), K (Kelvin).
 
-    # First convert everything to Celsius
+    Args:
+        value (float): The temperature value to convert.
+        from_unit (str): The unit to convert from ('C', 'F', or 'K').
+        to_unit (str): The unit to convert to ('C', 'F', or 'K').
+
+    Returns:
+        float: The converted temperature.
+
+    Raises:
+        ValueError: If a unit is unrecognised or Kelvin is negative.
+    """
+    from_unit = from_unit.strip().upper()
+    to_unit   = to_unit.strip().upper()
+
+    supported = {"C", "F", "K"}
+    if from_unit not in supported:
+        raise ValueError(
+            f"Unknown unit '{from_unit}'. Supported units: C, F, K."
+        )
+    if to_unit not in supported:
+        raise ValueError(
+            f"Unknown unit '{to_unit}'. Supported units: C, F, K."
+        )
+
+    # Step 1 — normalise everything to Celsius first
     if from_unit == "C":
         celsius = value
     elif from_unit == "F":
         celsius = fahrenheit_to_celsius(value)
-    elif from_unit == "K":
-        celsius = kelvin_to_celsius(value)
-    else:
-        raise ValueError(f"Unknown unit: {from_unit}")
+    else:  # K
+        celsius = kelvin_to_celsius(value)   # raises if negative
 
-    # Then convert from Celsius to target
+    # Step 2 — convert from Celsius to the target unit
     if to_unit == "C":
         return celsius
     elif to_unit == "F":
         return celsius_to_fahrenheit(celsius)
-    elif to_unit == "K":
+    else:  # K
         return celsius_to_kelvin(celsius)
-    else:
-        raise ValueError(f"Unknown unit: {to_unit}")
+
+
+def all_conversions(value, from_unit):
+    """
+    Return a dict of conversions from one unit to all three units.
+    Useful for displaying a summary table.
+    """
+    from_unit = from_unit.strip().upper()
+    return {
+        unit: convert(value, from_unit, unit)
+        for unit in ("C", "F", "K")
+    }
