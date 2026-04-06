@@ -58,7 +58,7 @@ No pip installs required. Pure Python 3.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/temperature-converter.git
+git clone https://github.com/tanmayakumar9070-ctrl/temperature-converter.git
 
 # 2. Enter the project folder
 cd temperature-converter
